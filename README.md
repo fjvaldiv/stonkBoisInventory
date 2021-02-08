@@ -1,2 +1,2 @@
 # stonkBoisInventory
-Hello, this is out README
+Hello, this is our README
