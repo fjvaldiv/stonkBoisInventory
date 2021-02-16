@@ -32,7 +32,7 @@ class Model(dict):
             self.clear()
             return resp
 
-class Inventory(Model):
+class Product(Model):
     db_client = pymongo.MongoClient('localhost', 27017)
     collection = db_client["inventory"]["products_list"]
 
@@ -47,4 +47,17 @@ class Inventory(Model):
         for product in products:
             product["_id"] = str(product["_id"])
         return products
-        
+
+    def find_by_category(self, category):
+        products = list(self.collection.find({"category" : category}))
+        for product in products:
+            product["_id"] = str(product["_id"])
+        return products
+
+    def find_by_brand(self, brand):
+        products = list(self.collection.find({"brand" : brand}))
+        for product in products:
+            product["_id"] = str(product["_id"])
+        return products
+
+    #def find_by_id(self, id):
