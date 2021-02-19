@@ -1,8 +1,30 @@
 from flask import Flask
 from flask import request
 from flask import jsonify
+from flask_cors import CORS
 from model_mongodb import Product
+
+
 app = Flask(__name__)
+
+#CORS stands for Cross Origin Requests.
+CORS(app) #Here we'll allow requests coming from any domain. Not recommended for production environment.
+
+products = {
+    'products_list' :
+    [
+        {
+            'name' : 'couch',
+            'price' : '-100',
+            'quantity' : '1',
+            'category' : 'furniture',
+            'description' : 'dis a couch',
+            'brand' : 'couch brand',
+            'productID' : '420',
+            'picture' : 'hi'
+        }
+    ]
+}
 
 @app.route('/')
 def hello_world():
