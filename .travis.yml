@@ -13,9 +13,9 @@ matrix:
       script:
         - python -m pytest inv_backend_tests.py
     
-    - language: javascript
-      javascript:
-        - '1.5'
+    - language: node_js
+      node_js:
+        - '0.10'
       before_install:
         - cd frontend/
       install:
