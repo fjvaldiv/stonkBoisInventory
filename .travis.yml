@@ -1,10 +1,24 @@
-language: python
-python:
-- '3.6'
-- '3.7'
-- '3.8'
-- '3.9'
-install:
-- pip install -r requirements.txt
-script:
-- python -m pytest backend/inv_backend_tests.py
+matrix:
+  include:
+    - language: python
+      python:
+      - '3.6'
+      - '3.7'
+      - '3.8'
+      - '3.9'
+      before_install:
+        - cd backend/
+      install:
+        - pip install -r requirements.txt
+      script:
+        - python -m pytest inv_backend_tests.py
+    
+    - language: javascript
+      javascript:
+        - '1.5'
+      before_install:
+        - cd frontend/
+      install:
+        - npm install
+      script:
+        - yarn test dummy.test.js
