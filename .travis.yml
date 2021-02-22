@@ -19,6 +19,6 @@ matrix:
       before_install:
         - cd frontend/
       install:
-        - npm install
+        - yarn install
       script:
-        - sudo npm test
+        - yarn test dummy.test.js
