@@ -15,10 +15,10 @@ matrix:
     
     - language: node_js
       node_js:
-        - '0.10'
+        - '12'
       before_install:
         - cd frontend/
       install:
-        - yarn install
+        - npm install
       script:
-        - yarn test dummy.test.js
+        - npm test dummy.test.js
