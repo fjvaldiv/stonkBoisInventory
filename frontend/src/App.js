@@ -26,7 +26,7 @@ class App extends Component {
    }
 
    state = {
-      characters: [],
+      products: [],
       activeTab: 1,
       inventory: {
          categories:{
@@ -53,6 +53,7 @@ class App extends Component {
       this.setState({newItemForm: formData});
    }
 
+   // TODO: Needs to either call makePostCall or be combined with makePostCall
    addNewProduct(product){
       
       this.setState({newItemForm: {category: '',name: '',price: '',imageURL: ''}});
@@ -68,8 +69,8 @@ class App extends Component {
       this.setState({inventory:inventory});
    }
 
-   makePostCall(character){
-      return axios.post('http://localhost:5000/products', character)
+   makePostCall(product){
+      return axios.post('http://localhost:5000/products', product)
        .then(function (response) {
          console.log(response);
          return response;
@@ -93,29 +94,29 @@ class App extends Component {
        });
    }
 
-   handleSubmit = character => {
-      this.makePostCall(character).then( callResult => {
+   handleSubmit = product => {
+      this.makePostCall(product).then( callResult => {
          console.log(callResult)
-         console.log(character)
+         console.log(product)
          if (callResult.status === 201) {
-            this.setState({ characters: [...this.state.characters, callResult.data] });
+            this.setState({ products: [...this.state.products, callResult.data] });
          }
       });
    }
 
-   removeCharacter = index => {
-      const { characters } = this.state
+   removeproduct = index => {
+      const { products: products } = this.state
 
-      const character = characters.find((c, i) => {
+      const product = products.find((c, i) => {
          return i === index
       })
 
-      console.log(character)
+      console.log(product)
 
-      this.makeDeleteCall(character.id).then( callResult => {
+      this.makeDeleteCall(product.id).then( callResult => {
          if (callResult === true) {
             this.setState({
-               characters: characters.filter((c, i) => {
+               products: products.filter((c, i) => {
                   return i !== index
                }),
             })
@@ -126,8 +127,8 @@ class App extends Component {
    componentDidMount() {
       axios.get('http://localhost:5000/products')
        .then(res => {
-         const characters = res.data.products_list;
-         this.setState({ characters });
+         const products = res.data.products_list;
+         this.setState({ products });
        })
        .catch(function (error) {
          //Not handling the error. Just logging into the console.
@@ -138,7 +139,7 @@ class App extends Component {
    // TODO: don't forget to write in docs to npm install node-sass
 
    render () {
-      // const { characters } = this.state;
+      // const { products } = this.state;
 
       return (
          <div className='App'>
@@ -148,7 +149,8 @@ class App extends Component {
             <div className='app-body'>
                <Sidebar activeTab={this.state.activeTab} changeTab={this.changeActiveTab.bind(this)}/>
                <MyRouter 
-                  activeTab={this.state.activeTab} 
+                  activeTab={this.state.activeTab}
+                  products={this.state.products}
                   inventory={this.state.inventory}
                   newItemFormData={this.state.newItemForm}
                   changeNewItemForm={this.changeNewItemForm.bind(this)}
@@ -160,7 +162,7 @@ class App extends Component {
 
       // return (
       //    <div className="container">
-      //       <Table characterData={characters} removeCharacter={this.removeCharacter} />
+      //       <Table productData={products} removeproduct={this.removeproduct} />
       //       <Form handleSubmit={this.handleSubmit} />
       //    </div>
       // );
