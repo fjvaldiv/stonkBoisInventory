@@ -21,18 +21,19 @@ const ProductTableRow = (props) => {
   
   class ProductsTab extends React.Component {
     
-    renderTableRows(inventory){
-      const categoryKeys = Object.keys(inventory.categories);
-      const CKLength = categoryKeys.length;
-      let listOfProducts = [];
+    renderTableRows(products){
+      // const categoryKeys = Object.keys(inventory.categories);
+      // const CKLength = categoryKeys.length;
+      // let listOfProducts = [];
       
-      for(let i = 0; i<CKLength; i++){
-        let category = categoryKeys[i];
-        listOfProducts = listOfProducts.concat(inventory.categories[category]);
-      }
+      // for(let i = 0; i<CKLength; i++){
+      //   let category = categoryKeys[i];
+      //   listOfProducts = listOfProducts.concat(inventory.categories[category]);
+      // }
       
-      let LOPlength = listOfProducts.length;
-      if( LOPlength === 0){
+      // let LOPlength = listOfProducts.length;
+      // let productsLength = products.length;s
+      if( products.length === 0){
         return <div><p>There are currently no items in the inventory</p></div>
       } else {
         let rows = [
@@ -48,8 +49,8 @@ const ProductTableRow = (props) => {
         </tr>
         ];
         
-        for(let i = 0; i<LOPlength; i++){
-          rows.push(<ProductTableRow product={listOfProducts[i]}/>);
+        for(let i = 0; i<products.length; i++){
+          rows.push(<ProductTableRow product={products[i]}/>);
         }
         
         return rows;
@@ -64,7 +65,7 @@ const ProductTableRow = (props) => {
           </h1>
           <p>Showing all available products:</p>
           <table className='productTable'>
-            {this.renderTableRows(this.props.inventory)}
+            {this.renderTableRows(this.props.products)}
           </table>
         </div>
       );
