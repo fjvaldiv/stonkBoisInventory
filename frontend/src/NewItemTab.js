@@ -86,7 +86,7 @@ class NewItemTab extends React.Component {
       this.setState({formErrors: errors});
       
       this.props.changeNewItemForm({name: name, price: price, quantity: quantity,
-        category: category, imageURL: imageURL});
+        category: category, brand: brand, imageURL: imageURL});
     }
     
     render(){

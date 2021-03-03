@@ -10,16 +10,19 @@ const ProductTableRow = (props) => {
         <td>${props.product.price}</td>
         <td>{props.product.quantity}</td>
         <td>{props.product.category}</td>
-        <td>{props.product.description}</td>
         <td>{props.product.brand}</td>
-        <td>{props.product.productID}</td>
+        <td>{props.product._id}</td>
         <td><a target="_blank" href={props.product.imageURL}>View</a></td>
-        <td className='editButton'>edit</td>
+        <td className='editButton'>Edit</td>
+        <td><button onClick={() => props.removeProduct(props.product._id)}>Delete</button></td>
       </tr>
     );
   }
   
   class ProductsTab extends React.Component {
+    constructor() {
+      super();
+    }
     
     renderTableRows(products){
       // const categoryKeys = Object.keys(inventory.categories);
@@ -33,7 +36,8 @@ const ProductTableRow = (props) => {
       
       // let LOPlength = listOfProducts.length;
       // let productsLength = products.length;s
-      if( products.length === 0){
+
+      if (products.length === 0){
         return <div><p>There are currently no items in the inventory</p></div>
       } else {
         let rows = [
@@ -42,7 +46,6 @@ const ProductTableRow = (props) => {
           <th>Price</th>
           <th>Quantity</th>
           <th>Category</th>
-          <th>Description</th>
           <th>Brand</th>
           <th>Product ID</th>
           <th>Image</th>
@@ -50,7 +53,7 @@ const ProductTableRow = (props) => {
         ];
         
         for(let i = 0; i<products.length; i++){
-          rows.push(<ProductTableRow product={products[i]}/>);
+          rows.push(<ProductTableRow product={products[i]} removeProduct={this.props.removeProduct}/>);
         }
         
         return rows;
