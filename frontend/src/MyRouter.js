@@ -18,7 +18,7 @@ class MyRouter extends React.Component {
         case 1:
           return <ProductsTab products={this.props.products} removeProduct={this.props.removeProduct}/>;
         case 3:
-          return <OrdersTab orders={this.props.orders}/>;
+          return <OrdersTab orders={this.props.orders} removeOrder={this.props.removeOrder}/>;
         default:
             break;
       }

@@ -87,6 +87,21 @@ class App extends Component {
       })
     }
 
+   removeOrder = id => {
+      const { orders } = this.state
+    
+      return axios.delete(`http://localhost:5000/orders/${id}`)
+        .then(response => {
+          if (response.status === 204){
+            this.setState({
+              orders: orders.filter((order, i) => {
+                return order._id !== id
+              }),
+            })
+          }
+      })
+    }
+
    componentDidMount() {
       axios.get('http://localhost:5000/products')
        .then(res => {
@@ -128,6 +143,7 @@ class App extends Component {
                   changeNewItemForm={this.changeNewItemForm.bind(this)}
                   addNewProduct={this.addNewProduct.bind(this)}
                   removeProduct={this.removeProduct.bind(this)}
+                  removeOrder={this.removeOrder.bind(this)}
                />
             </div>
          </div>
