@@ -61,3 +61,31 @@ class Product(Model):
         return products
 
     #def find_by_id(self, id):
+
+class Order(Model):
+    db_client = pymongo.MongoClient('localhost', 27017)
+    collection = db_client["orders"]["orders_list"]
+
+    def find_all(self):
+        orders = list(self.collection.find())
+        for order in orders:
+            order["_id"] = str(order["_id"])
+        return orders
+
+    def find_by_name(self, name):
+        orders = list(self.collection.find({"name": name}))
+        for order in orders:
+            order["_id"] = str(order["_id"])
+        return orders
+
+    '''def find_by_category(self, category):
+        products = list(self.collection.find({"category" : category}))
+        for product in products:
+            product["_id"] = str(product["_id"])
+        return products
+
+    def find_by_brand(self, brand):
+        products = list(self.collection.find({"brand" : brand}))
+        for product in products:
+            product["_id"] = str(product["_id"])
+        return products'''
