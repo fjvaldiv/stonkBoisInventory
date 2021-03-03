@@ -35,6 +35,68 @@ body{
       text-align:center;
       padding:2px 4px;
     }
+    button{
+      border:1px solid black;
+      margin-top:6px;
+      margin-left:5%;
+      border-radius:2px;
+      background:#2865d5;
+      padding:8px 16px;
+      outline:none;
+      font-weight:normal;
+      font-family:inherit;
+      color:white;
+      transition:0.2s;
+      &:hover{
+        cursor:pointer;
+        color: white;
+        border-color:white;
+      }
+    }
+    .editButton{
+      opacity:0.4;
+      transition:0.2s;
+      &:hover{
+        opacity:1.0;
+        cursor:pointer;
+        color:$accent-01;
+      }
+    }
+  }
+}
+
+.OrdersTab {
+  box-sizing:border-box;
+  width:100%;
+  .orderTable, td, th{
+    border:1px solid black;
+  }
+  .orderTable{
+    width:100%;
+    border-collapse:collapse;
+    font-size:14px;
+    td{
+      text-align:center;
+      padding:2px 4px;
+    }
+    button{
+      border:1px solid black;
+      margin-top:6px;
+      margin-left:5%;
+      border-radius:2px;
+      background:#2865d5;
+      padding:8px 16px;
+      outline:none;
+      font-weight:normal;
+      font-family:inherit;
+      color:white;
+      transition:0.2s;
+      &:hover{
+        cursor:pointer;
+        color: white;
+        border-color:white;
+      }
+    }
     .editButton{
       opacity:0.4;
       transition:0.2s;
@@ -95,16 +157,17 @@ body{
     margin-top:24px;
     margin-left:20%;
     border-radius:3px;
-    background:inherit;
+    background:#2865d5;
     padding:8px 16px;
     outline:none;
-    font-weight:bold;
+    font-weight:normal;
     font-family:inherit;
+    color:white;
     transition:0.2s;
     &:hover{
       cursor:pointer;
-      color: $confirm-green;
-      border-color:$confirm-green;
+      color: white;
+      border-color:white;
     }
   }
   label{

@@ -20,30 +20,22 @@ const Sidebar = (props) => {
 }
 
 class App extends Component {
-   constructor() {
-      super();
-      
+   constructor(props) {
+      super(props);
+      this.state = {
+         products: [],
+         activeTab: 1,
+         newItemForm: {
+            name: '',
+            price: '',
+            quantity: '',
+            category: '',
+            brand: '',
+            imageURL: ''
+         },
+         orders: []
+      };  
    }
-
-   state = {
-      products: [],
-      activeTab: 1,
-      inventory: {
-         categories:{
-           dresses:[],
-           shirts:[
- {category: "shirts", name: "Blue T-Shirt", price: "16.99", imageURL: "https://cdn.shopify.com/s/files/1/0797/0169/products/mockup-c6d64730_1024x1024.jpg"}],
-           pants:[],
-           accessories:[]
-         }
-      },
-      newItemForm: {
-         category: '',
-         name: '',
-         price: '',
-         imageURL: ''
-      }
-   };
 
    changeActiveTab(index) {
       this.setState({activeTab: index});
@@ -54,81 +46,61 @@ class App extends Component {
    }
 
    // TODO: Needs to either call makePostCall or be combined with makePostCall
-   addNewProduct(product){
-      
-      this.setState({newItemForm: {category: '',name: '',price: '',imageURL: ''}});
-      
-      const decapitalize = (string) => {
-        return string.charAt(0).toLowerCase() + string.slice(1);
-      }
-      
-      product.category = decapitalize(product.category);
-      let inventory = this.state.inventory;
-      inventory.categories[product.category].push(product);
-      
-      this.setState({inventory:inventory});
+   addNewProduct(product) {
+      this.makePostCall(product).then( callResult => {
+         if (callResult !== false) {
+            this.setState({ newItemForm: {'name' : '', 'price' : '', 'quantity' : '',
+             'category' : '', 'brand' : '', 'imageURL' : ''}});
+            console.log(callResult);
+            this.setState({ products: [...this.state.products, callResult.data] });
+            console.log(this.state.products);
+         }
+      });
    }
 
    makePostCall(product){
       return axios.post('http://localhost:5000/products', product)
-       .then(function (response) {
-         console.log(response);
-         return response;
-       })
-       .catch(function (error) {
-         console.log(error);
-         return false;
-       });
+         .then(function (response) {
+            console.log(response);
+            if (response.status === 201) {
+               return response;
+            }
+         })
+         .catch(function (error) {
+            console.log(error);
+            return false;
+         });
    }
 
-   makeDeleteCall(id){
-      console.log('http://localhost:5000/products/' + id)
-      return axios.delete('http://localhost:5000/products/' + id)
-       .then(function (response) {
-         console.log(response);
-         return (response.status === 200);
-       })
-       .catch(function (error) {
-         console.log(error);
-         return false;
-       });
-   }
-
-   handleSubmit = product => {
-      this.makePostCall(product).then( callResult => {
-         console.log(callResult)
-         console.log(product)
-         if (callResult.status === 201) {
-            this.setState({ products: [...this.state.products, callResult.data] });
-         }
-      });
-   }
-
-   removeproduct = index => {
-      const { products: products } = this.state
-
-      const product = products.find((c, i) => {
-         return i === index
-      })
-
-      console.log(product)
-
-      this.makeDeleteCall(product.id).then( callResult => {
-         if (callResult === true) {
+   removeProduct = id => {
+      const { products } = this.state
+    
+      return axios.delete(`http://localhost:5000/products/${id}`)
+        .then(response => {
+          if (response.status === 204){
             this.setState({
-               products: products.filter((c, i) => {
-                  return i !== index
-               }),
+              products: products.filter((product, i) => {
+                return product._id !== id
+              }),
             })
-         }
-      });
-   }
+          }
+      })
+    }
 
    componentDidMount() {
       axios.get('http://localhost:5000/products')
        .then(res => {
          const products = res.data.products_list;
          this.setState({ products });
+       })
+       .catch(function (error) {
+         //Not handling the error. Just logging into the console.
+         console.log(error);
+       });
+      axios.get('http://localhost:5000/orders')
+       .then(res => {
+         const orders = res.data.orders_list;
+         this.setState({ orders });
        })
        .catch(function (error) {
          //Not handling the error. Just logging into the console.
@@ -151,10 +123,11 @@ class App extends Component {
                <MyRouter 
                   activeTab={this.state.activeTab}
                   products={this.state.products}
-                  inventory={this.state.inventory}
+                  orders={this.state.orders}
                   newItemFormData={this.state.newItemForm}
                   changeNewItemForm={this.changeNewItemForm.bind(this)}
                   addNewProduct={this.addNewProduct.bind(this)}
+                  removeProduct={this.removeProduct.bind(this)}
                />
             </div>
          </div>
