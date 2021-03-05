@@ -35,11 +35,11 @@ class App extends Component {
             imageURL: ''
          },
          newOrderForm: {
-            name: '',
-            price: '',
+            products: '',
             quantity: '',
-            category: '',
-            brand: '',
+            price: '',
+            status: '',
+            productIDs: '',
             imageURL: ''
          },
       };  
@@ -87,8 +87,8 @@ class App extends Component {
    addNewOrder(order) {
       this.makeOrderPostCall(order).then( callResult => {
          if (callResult !== false) {
-            this.setState({ newOrderForm: {'name': '', 'price': '',
-               'quantity': '', 'category': '', 'brand': '', 'imageURL': ''
+            this.setState({ newOrderForm: {'products': '', 'quantity': '', 
+               'price': '', 'status': '', 'productIDs': '', 'imageURL': ''
             }});
             console.log(callResult);
             this.setState({ orders: [...this.state.orders, callResult.data] });
@@ -175,12 +175,17 @@ class App extends Component {
                <Sidebar activeTab={this.state.activeTab} changeTab={this.changeActiveTab.bind(this)}/>
                <MyRouter 
                   activeTab={this.state.activeTab}
+
                   products={this.state.products}
-                  orders={this.state.orders}
                   newItemFormData={this.state.newItemForm}
                   changeNewItemForm={this.changeNewItemForm.bind(this)}
                   addNewProduct={this.addNewProduct.bind(this)}
                   removeProduct={this.removeProduct.bind(this)}
+
+                  orders={this.state.orders}
+                  newOrderFormData={this.state.newOrderForm}
+                  changeNewOrderForm={this.changeNewOrderForm.bind(this)}
+                  addNewOrder={this.addNewOrder.bind(this)}
                   removeOrder={this.removeOrder.bind(this)}
                />
             </div>
