@@ -20,30 +20,30 @@ const Sidebar = (props) => {
 }
 
 class App extends Component {
-   constructor() {
-      super();
-      
+   constructor(props) {
+      super(props);
+      this.state = {
+         activeTab: 1,
+         products: [],
+         orders: [],
+         newItemForm: {
+            name: '',
+            price: '',
+            quantity: '',
+            category: '',
+            brand: '',
+            imageURL: ''
+         },
+         newOrderForm: {
+            products: '',
+            quantity: '',
+            price: '',
+            status: '',
+            productIDs: '',
+            imageURL: ''
+         },
+      };  
    }
-
-   state = {
-      products: [],
-      activeTab: 1,
-      inventory: {
-         categories:{
-           dresses:[],
-           shirts:[
- {category: "shirts", name: "Blue T-Shirt", price: "16.99", imageURL: "https://cdn.shopify.com/s/files/1/0797/0169/products/mockup-c6d64730_1024x1024.jpg"}],
-           pants:[],
-           accessories:[]
-         }
-      },
-      newItemForm: {
-         category: '',
-         name: '',
-         price: '',
-         imageURL: ''
-      }
-   };
 
    changeActiveTab(index) {
       this.setState({activeTab: index});
@@ -53,82 +53,109 @@ class App extends Component {
       this.setState({newItemForm: formData});
    }
 
-   // TODO: Needs to either call makePostCall or be combined with makePostCall
-   addNewProduct(product){
-      
-      this.setState({newItemForm: {category: '',name: '',price: '',imageURL: ''}});
-      
-      const decapitalize = (string) => {
-        return string.charAt(0).toLowerCase() + string.slice(1);
-      }
-      
-      product.category = decapitalize(product.category);
-      let inventory = this.state.inventory;
-      inventory.categories[product.category].push(product);
-      
-      this.setState({inventory:inventory});
+   changeNewOrderForm(formData){
+      this.setState({newOrderForm: formData});
    }
 
-   makePostCall(product){
-      return axios.post('http://localhost:5000/products', product)
-       .then(function (response) {
-         console.log(response);
-         return response;
-       })
-       .catch(function (error) {
-         console.log(error);
-         return false;
-       });
-   }
-
-   makeDeleteCall(id){
-      console.log('http://localhost:5000/products/' + id)
-      return axios.delete('http://localhost:5000/products/' + id)
-       .then(function (response) {
-         console.log(response);
-         return (response.status === 200);
-       })
-       .catch(function (error) {
-         console.log(error);
-         return false;
-       });
-   }
-
-   handleSubmit = product => {
-      this.makePostCall(product).then( callResult => {
-         console.log(callResult)
-         console.log(product)
-         if (callResult.status === 201) {
+   addNewProduct(product) {
+      this.makeProductPostCall(product).then( callResult => {
+         if (callResult !== false) {
+            this.setState({ newItemForm: {'name' : '', 'price' : '', 'quantity' : '',
+             'category' : '', 'brand' : '', 'imageURL' : ''}});
+            console.log(callResult);
             this.setState({ products: [...this.state.products, callResult.data] });
+            console.log(this.state.products);
          }
       });
+      this.changeActiveTab(1);
    }
 
-   removeproduct = index => {
-      const { products: products } = this.state
+   makeProductPostCall(product){
+      return axios.post('http://localhost:5000/products', product)
+         .then(function (response) {
+            console.log(response);
+            if (response.status === 201) {
+               return response;
+            }
+         })
+         .catch(function (error) {
+            console.log(error);
+            return false;
+         });
+   }
 
-      const product = products.find((c, i) => {
-         return i === index
-      })
+   addNewOrder(order) {
+      this.makeOrderPostCall(order).then( callResult => {
+         if (callResult !== false) {
+            this.setState({ newOrderForm: {'products': '', 'quantity': '', 
+               'price': '', 'status': '', 'productIDs': '', 'imageURL': ''
+            }});
+            console.log(callResult);
+            this.setState({ orders: [...this.state.orders, callResult.data] });
+            console.log(this.state.orders);
+         }
+      });
+      this.changeActiveTab(3);
+   }
 
-      console.log(product)
+   makeOrderPostCall(order) {
+      return axios.post('http://localhost:5000/orders', order)
+         .then(function (response) {
+            console.log(response);
+            if (response.status === 201) {
+               return response;
+            }
+         })
+         .catch(function (error) {
+            console.log(error);
+            return false;
+         });
+   }
 
-      this.makeDeleteCall(product.id).then( callResult => {
-         if (callResult === true) {
+   removeProduct = id => {
+      const { products } = this.state
+    
+      return axios.delete(`http://localhost:5000/products/${id}`)
+        .then(response => {
+          if (response.status === 204){
             this.setState({
-               products: products.filter((c, i) => {
-                  return i !== index
-               }),
+              products: products.filter((product, i) => {
+                return product._id !== id
+              }),
             })
-         }
-      });
-   }
+          }
+      })
+    }
+
+   removeOrder = id => {
+      const { orders } = this.state
+    
+      return axios.delete(`http://localhost:5000/orders/${id}`)
+        .then(response => {
+          if (response.status === 204){
+            this.setState({
+              orders: orders.filter((order, i) => {
+                return order._id !== id
+              }),
+            })
+          }
+      })
+    }
 
    componentDidMount() {
       axios.get('http://localhost:5000/products')
        .then(res => {
          const products = res.data.products_list;
          this.setState({ products });
+       })
+       .catch(function (error) {
+         //Not handling the error. Just logging into the console.
+         console.log(error);
+       });
+      axios.get('http://localhost:5000/orders')
+       .then(res => {
+         const orders = res.data.orders_list;
+         this.setState({ orders });
        })
        .catch(function (error) {
          //Not handling the error. Just logging into the console.
@@ -143,18 +170,23 @@ class App extends Component {
 
       return (
          <div className='App'>
-            {/* <h2 className='header'><i className="icon-th-list"></i> Inventory Management Application Demo</h2> */}
-            {/* <h1 className='title' onClick={() => this.changeActiveTab(1)}>Inventory</h1> */}
             <h1 className='title'>Inventory</h1>
             <div className='app-body'>
                <Sidebar activeTab={this.state.activeTab} changeTab={this.changeActiveTab.bind(this)}/>
                <MyRouter 
                   activeTab={this.state.activeTab}
+
                   products={this.state.products}
-                  inventory={this.state.inventory}
                   newItemFormData={this.state.newItemForm}
                   changeNewItemForm={this.changeNewItemForm.bind(this)}
                   addNewProduct={this.addNewProduct.bind(this)}
+                  removeProduct={this.removeProduct.bind(this)}
+
+                  orders={this.state.orders}
+                  newOrderFormData={this.state.newOrderForm}
+                  changeNewOrderForm={this.changeNewOrderForm.bind(this)}
+                  addNewOrder={this.addNewOrder.bind(this)}
+                  removeOrder={this.removeOrder.bind(this)}
                />
             </div>
          </div>

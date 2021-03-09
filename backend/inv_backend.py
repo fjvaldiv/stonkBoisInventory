@@ -2,7 +2,7 @@ from flask import Flask
 from flask import request
 from flask import jsonify
 from flask_cors import CORS
-from model_mongodb import Product, Order
+from backend.model_mongodb import Product, Order
 
 
 app = Flask(__name__)
@@ -62,16 +62,18 @@ def get_orders():
         resp = jsonify(newOrder), 201
         return resp
 
-""" @app.route('/users/<id>', methods = ['DELETE'])
-def get_user(id):
-    if id:
-        if request.method == 'DELETE':
-            for user in users['users_list']:
-                if user['id'] == id:
-                    users['users_list'].remove(user)
-        else:
-            for user in users['users_list']:
-                if user['id'] == id:
-                    return user
-            return ({})
-    return users """
+@app.route('/products/<id>', methods = ['DELETE'])
+def get_product(id):
+    if request.method == 'GET':
+        product = Product({"_id":id})
+        if product.reload() :
+            return product
+        else :
+            return jsonify({"error": "Product not found"}), 404
+    elif request.method == 'DELETE':
+        product = Product({"_id":id})
+        resp = product.remove()
+        if resp['n'] != 1:
+            return {}, 404
+        return {}, 204
+
