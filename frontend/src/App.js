@@ -23,8 +23,9 @@ class App extends Component {
    constructor(props) {
       super(props);
       this.state = {
-         products: [],
          activeTab: 1,
+         products: [],
+         orders: [],
          newItemForm: {
             name: '',
             price: '',
@@ -33,7 +34,14 @@ class App extends Component {
             brand: '',
             imageURL: ''
          },
-         orders: []
+         newOrderForm: {
+            products: '',
+            quantity: '',
+            price: '',
+            status: '',
+            productIDs: '',
+            imageURL: ''
+         },
       };  
    }
 
@@ -45,9 +53,12 @@ class App extends Component {
       this.setState({newItemForm: formData});
    }
 
-   // TODO: Needs to either call makePostCall or be combined with makePostCall
+   changeNewOrderForm(formData){
+      this.setState({newOrderForm: formData});
+   }
+
    addNewProduct(product) {
-      this.makePostCall(product).then( callResult => {
+      this.makeProductPostCall(product).then( callResult => {
          if (callResult !== false) {
             this.setState({ newItemForm: {'name' : '', 'price' : '', 'quantity' : '',
              'category' : '', 'brand' : '', 'imageURL' : ''}});
@@ -56,10 +67,39 @@ class App extends Component {
             console.log(this.state.products);
          }
       });
+      this.changeActiveTab(1);
    }
 
-   makePostCall(product){
+   makeProductPostCall(product){
       return axios.post('http://localhost:5000/products', product)
+         .then(function (response) {
+            console.log(response);
+            if (response.status === 201) {
+               return response;
+            }
+         })
+         .catch(function (error) {
+            console.log(error);
+            return false;
+         });
+   }
+
+   addNewOrder(order) {
+      this.makeOrderPostCall(order).then( callResult => {
+         if (callResult !== false) {
+            this.setState({ newOrderForm: {'products': '', 'quantity': '', 
+               'price': '', 'status': '', 'productIDs': '', 'imageURL': ''
+            }});
+            console.log(callResult);
+            this.setState({ orders: [...this.state.orders, callResult.data] });
+            console.log(this.state.orders);
+         }
+      });
+      this.changeActiveTab(3);
+   }
+
+   makeOrderPostCall(order) {
+      return axios.post('http://localhost:5000/orders', order)
          .then(function (response) {
             console.log(response);
             if (response.status === 201) {
@@ -81,6 +121,21 @@ class App extends Component {
             this.setState({
               products: products.filter((product, i) => {
                 return product._id !== id
+              }),
+            })
+          }
+      })
+    }
+
+   removeOrder = id => {
+      const { orders } = this.state
+    
+      return axios.delete(`http://localhost:5000/orders/${id}`)
+        .then(response => {
+          if (response.status === 204){
+            this.setState({
+              orders: orders.filter((order, i) => {
+                return order._id !== id
               }),
             })
           }
@@ -115,19 +170,23 @@ class App extends Component {
 
       return (
          <div className='App'>
-            {/* <h2 className='header'><i className="icon-th-list"></i> Inventory Management Application Demo</h2> */}
-            {/* <h1 className='title' onClick={() => this.changeActiveTab(1)}>Inventory</h1> */}
             <h1 className='title'>Inventory</h1>
             <div className='app-body'>
                <Sidebar activeTab={this.state.activeTab} changeTab={this.changeActiveTab.bind(this)}/>
                <MyRouter 
                   activeTab={this.state.activeTab}
+
                   products={this.state.products}
-                  orders={this.state.orders}
                   newItemFormData={this.state.newItemForm}
                   changeNewItemForm={this.changeNewItemForm.bind(this)}
                   addNewProduct={this.addNewProduct.bind(this)}
                   removeProduct={this.removeProduct.bind(this)}
+
+                  orders={this.state.orders}
+                  newOrderFormData={this.state.newOrderForm}
+                  changeNewOrderForm={this.changeNewOrderForm.bind(this)}
+                  addNewOrder={this.addNewOrder.bind(this)}
+                  removeOrder={this.removeOrder.bind(this)}
                />
             </div>
          </div>

@@ -52,9 +52,10 @@ class ProductCard extends React.Component{
     render(){
       return(
         <div className = 'ProductCard'>
-          <p className='category'>Products &#187; {this.state.category}</p>
+          <p className='category'>Products &#187; {this.state.category} &#187; {this.state.brand}</p>
           <p className='name'>{this.state.name}</p>
           <img src={this.state.imageURL}></img>
+          <p className='quantity'>Quantity: <span>{this.state.quantity}</span></p>
           <p className='price'>from <span>${this.state.price}</span></p>
         </div>
       );

@@ -1,6 +1,7 @@
 import React from 'react';
 import NewItemTab from './NewItemTab';
 import ProductsTab from './ProductsTab';
+import NewOrderTab from './NewOrderTab';
 import OrdersTab from './OrdersTab';
 import './index.scss';
 
@@ -17,8 +18,15 @@ class MyRouter extends React.Component {
                    />
         case 1:
           return <ProductsTab products={this.props.products} removeProduct={this.props.removeProduct}/>;
+        case 2:
+          return <NewOrderTab 
+                    orders={this.props.orders}
+                    formData={this.props.newOrderFormData}
+                    changeNewOrderForm={this.props.changeNewOrderForm}
+                    addNewOrder={this.props.addNewOrder}
+                    />
         case 3:
-          return <OrdersTab orders={this.props.orders}/>;
+          return <OrdersTab orders={this.props.orders} removeOrder={this.props.removeOrder}/>;
         default:
             break;
       }

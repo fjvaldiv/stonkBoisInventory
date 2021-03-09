@@ -14,6 +14,7 @@ const OrderTableRow = (props) => {
         <td>{props.order.productIDs}</td>
         <td><a target="_blank" href={props.order.imageURL}>View</a></td>
         <td className='editButton'>Edit</td>
+        <td><button onClick={() => props.removeOrder(props.order._id)}>Delete</button></td>
       </tr>
     );
   }
@@ -52,7 +53,7 @@ const OrderTableRow = (props) => {
         ];
         
         for(let i = 0; i<orders.length; i++){
-          rows.push(<OrderTableRow order={orders[i]}/>);
+          rows.push(<OrderTableRow order={orders[i]} removeOrder={this.props.removeOrder}/>);
         }
         
         return rows;
