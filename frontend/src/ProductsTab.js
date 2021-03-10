@@ -54,18 +54,10 @@ const ProductTableRow = (props) => {
           <h1>Available Products List</h1>
           <button onClick={() => this.props.changeActiveTab(0)} style={{float: 'right'}}>Add New Product</button>
           <p>Showing all available products:</p>
-          {/* <div class="switch">
-            <label>
-              In Stock
-              <input type="checkbox" />
-              <span class="lever"></span>
-              Out of Stock
-            </label>
-          </div> */}
+          <p>Sorted by: <b>{this.props.pSort}</b> (Click on row header to sort)</p>
           <table className='productTable'>
             {this.renderTableRows(this.props.products)}
           </table>
-          <p>Sorted by: <b>{this.props.pSort}</b> (Click on row header to sort)</p>
         </div>
       );
     }

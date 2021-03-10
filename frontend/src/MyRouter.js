@@ -11,11 +11,11 @@ class MyRouter extends React.Component {
       switch(active){
         case 0:
           return <NewItemTab 
-                   products={this.props.products}
-                   formData={this.props.newItemFormData}
-                   changeNewItemForm={this.props.changeNewItemForm}
-                   addNewProduct={this.props.addNewProduct}
-                   />
+                    products={this.props.products}
+                    formData={this.props.newItemFormData}
+                    changeNewItemForm={this.props.changeNewItemForm}
+                    addNewProduct={this.props.addNewProduct}
+                    />
         case 1:
           return <ProductsTab products={this.props.products} removeProduct={this.props.removeProduct}
                     changeActiveTab={this.props.changeActiveTab} setSortedProducts={this.props.setSortedProducts}
@@ -29,7 +29,8 @@ class MyRouter extends React.Component {
                     />
         case 3:
           return <OrdersTab orders={this.props.orders} removeOrder={this.props.removeOrder}
-                    changeActiveTab={this.props.changeActiveTab}/>;
+                    changeActiveTab={this.props.changeActiveTab} setSortedOrders={this.props.setSortedOrders}
+                    oSort={this.props.oSort}/>;
         default:
             break;
       }

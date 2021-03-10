@@ -33,11 +33,9 @@ class NewItemTab extends React.Component {
       
       let image = new Image();
       image.onerror = () =>{
-        // this.finalizeForm(false, product);
         this.finalizeForm(false, this.props.formData);
       }
       image.onload = () =>{
-        // this.finalizeForm(true, product);
         this.finalizeForm(true, this.props.formData);
       }
       this.setState({formErrors: errors});
@@ -51,8 +49,6 @@ class NewItemTab extends React.Component {
         errors.imageURL = true;
         this.setState({formErrors: errors});
       } else {
-        // TODO: implement some sort of post call inside addNewProduct, 
-        //       or combine addNewProduct with makePostCall
         this.props.addNewProduct(product);
       }
     }
