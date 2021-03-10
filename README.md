@@ -1,6 +1,8 @@
 # stonkBoisInventory
 Inventory management app designed for small business owners. Allows user to record and log products and orders in a simple table. Users are also able to sort inventory by different aspects (name, price, brand, etc.) of the product!
 
+## Development Environment set up
+
 ## Instructions to set up the linters we use:
 Pylint:
 - Run: pip install pylint
