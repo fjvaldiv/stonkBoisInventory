@@ -13,6 +13,11 @@ Backend:
   - Export (for IOS) or set (for windows) FLASK_APP and FLASK_ENV variables
   - To start program, run 'flask run'
 
+Database:
+  - For windows, follow these instructions to download MongoDB: https://docs.mongodb.com/manual/tutorial/install-mongodb-on-windows/
+  - For MacOS, follow these instructions to donwnload MongoDB: https://github.com/mongodb/homebrew-brew
+  - Run 'pip3 install pymongo' to download pymongo
+
 ## Instructions to set up the linters we use:
 Pylint:
 - Run: pip install pylint
