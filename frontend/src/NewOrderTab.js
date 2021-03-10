@@ -120,12 +120,6 @@ class NewOrderTab extends React.Component {
             </p>
             <button onClick={() => this.checkForm()}>Add Order</button>
           </div>
-          <div className='newItem-preview'>
-            <h1>Preview</h1>
-            <ProductCard product={this.props.formData} />
-            
-          </div>
-
         </div>
       );
     }

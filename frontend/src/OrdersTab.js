@@ -64,6 +64,7 @@ const OrderTableRow = (props) => {
       return(
         <div className='OrdersTab'>
           <h1>Order History</h1>
+          <button onClick={() => this.props.changeActiveTab(2)} style={{float: 'right'}}>Add New Order</button>
           <p>Showing all orders:</p>
           <table className='orderTable'>
             {this.renderTableRows(this.props.orders)}

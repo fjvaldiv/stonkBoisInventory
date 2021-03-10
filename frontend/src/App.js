@@ -1,6 +1,4 @@
 import React, { Component } from 'react';
-import Table from './Table';
-import Form from './Form';
 import axios from 'axios';
 import './index.scss';
 import MyRouter from './MyRouter';
@@ -9,9 +7,9 @@ const Sidebar = (props) => {
    return(
      <div className='Sidebar'>
        <ul>
-         <li className='add-new-item' onClick={() => props.changeTab(0)}><span>Add New Product</span></li>
+         {/* <li className='add-new-item' onClick={() => props.changeTab(0)}><span>Add New Product</span></li> */}
          <li className={props.activeTab === 1 ? 'active':''} onClick={() => props.changeTab(1)}>Products</li>
-         <li className='add-new-item' onClick={() => props.changeTab(2)}><span>Add New Order</span></li>
+         {/* <li className='add-new-item' onClick={() => props.changeTab(2)}><span>Add New Order</span></li> */}
          <li className={props.activeTab === 3 ? 'active':''} onClick={() => props.changeTab(3)}>Orders</li>
          {/* <li className={props.activeTab === 3 ? 'active':''} onClick={() => props.changeTab(3)}>Item Archive</li> */}
        </ul>
@@ -25,6 +23,7 @@ class App extends Component {
       this.state = {
          activeTab: 1,
          products: [],
+         pSort: 'Product Name',
          orders: [],
          newItemForm: {
             name: '',
@@ -96,6 +95,7 @@ class App extends Component {
          }
       });
       this.changeActiveTab(3);
+      this.setSortedProducts('Product Name');
    }
 
    makeOrderPostCall(order) {
@@ -142,11 +142,66 @@ class App extends Component {
       })
     }
 
+   setSortedProducts(sortBy){
+      this.setState({products: this.getSortedProducts(sortBy)});
+      this.setState({pSort : sortBy})
+   }
+
+   getSortedProducts(sortBy){
+      let dataToSort=this.state.products;
+      dataToSort.sort((a, b) => {
+         if (sortBy === 'Product Name') {
+            a = a.name.toLowerCase();
+            b = b.name.toLowerCase();
+            if (a < b)
+               return -1;
+            else if (a > b)
+               return 1;
+            else
+               return 0;
+         }
+         if (sortBy === 'Price')
+            return a.price-b.price;
+         if (sortBy === 'Quantity')
+            return a.quantity-b.quantity;
+         if (sortBy === 'Category') {
+            a = a.category.toLowerCase();
+            b = b.category.toLowerCase();
+            if (a < b)
+               return -1;
+            else if (a > b)
+               return 1;
+            else
+               return 0;
+         }
+         if (sortBy === 'Brand') {
+            a = a.brand.toLowerCase();
+            b = b.brand.toLowerCase();
+            if (a < b)
+               return -1;
+            else if (a > b)
+               return 1;
+            else
+               return 0;
+         }
+         if (sortBy === 'Product ID') {
+            if (a._id < b._id)
+               return -1;
+            else if (a._id > b._id)
+               return 1;
+            else
+               return 0;
+         }
+      });
+      return dataToSort;
+   }
+
    componentDidMount() {
       axios.get('http://localhost:5000/products')
        .then(res => {
          const products = res.data.products_list;
          this.setState({ products });
+         this.setSortedProducts('Product Name');
        })
        .catch(function (error) {
          //Not handling the error. Just logging into the console.
@@ -175,12 +230,15 @@ class App extends Component {
                <Sidebar activeTab={this.state.activeTab} changeTab={this.changeActiveTab.bind(this)}/>
                <MyRouter 
                   activeTab={this.state.activeTab}
+                  changeActiveTab={this.changeActiveTab.bind(this)}
 
                   products={this.state.products}
+                  pSort={this.state.pSort}
                   newItemFormData={this.state.newItemForm}
                   changeNewItemForm={this.changeNewItemForm.bind(this)}
                   addNewProduct={this.addNewProduct.bind(this)}
                   removeProduct={this.removeProduct.bind(this)}
+                  setSortedProducts={this.setSortedProducts.bind(this)}
 
                   orders={this.state.orders}
                   newOrderFormData={this.state.newOrderForm}
