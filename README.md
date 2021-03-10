@@ -2,6 +2,16 @@
 Inventory management app designed for small business owners. Allows user to record and log products and orders in a simple table. Users are also able to sort inventory by different aspects (name, price, brand, etc.) of the product!
 
 ## Development Environment set up
+Frontend:
+  - Follow these instructions to download Node.js: https://nodejs.org/en/download/
+  - Run 'npm install'
+  - To start program, run 'npm start'
+
+Backend:
+  - Follow these instructions to download Python 3: https://www.python.org/downloads/
+  - Follow these instructions to download Flask: https://flask.palletsprojects.com/en/1.1.x/installation/
+  - Export (for IOS) or set (for windows) FLASK_APP and FLASK_ENV variables
+  - To start program, run 'flask run'
 
 ## Instructions to set up the linters we use:
 Pylint:
