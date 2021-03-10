@@ -17,4 +17,4 @@ Prettier:
 UI Prototype: https://www.figma.com/file/6AHGD8gobrMKsmJyvTwqhT/Inventory-App-Design?node-id=0%3A1
 
 ## Wiki page
-wiki page link: https://github.com/fjvaldiv/stonkBoisInventory.wiki.git
+wiki page link: https://github.com/fjvaldiv/stonkBoisInventory/wiki/stonkBoisInventory-Wiki
