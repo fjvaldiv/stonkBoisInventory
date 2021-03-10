@@ -1,6 +1,4 @@
 import React, { Component } from 'react';
-import Table from './Table';
-import Form from './Form';
 import axios from 'axios';
 import './index.scss';
 import MyRouter from './MyRouter';
@@ -9,11 +7,8 @@ const Sidebar = (props) => {
    return(
      <div className='Sidebar'>
        <ul>
-         <li className='add-new-item' onClick={() => props.changeTab(0)}><span>Add New Product</span></li>
          <li className={props.activeTab === 1 ? 'active':''} onClick={() => props.changeTab(1)}>Products</li>
-         <li className='add-new-item' onClick={() => props.changeTab(2)}><span>Add New Order</span></li>
          <li className={props.activeTab === 3 ? 'active':''} onClick={() => props.changeTab(3)}>Orders</li>
-         {/* <li className={props.activeTab === 3 ? 'active':''} onClick={() => props.changeTab(3)}>Item Archive</li> */}
        </ul>
      </div>
    );
@@ -24,8 +19,11 @@ class App extends Component {
       super(props);
       this.state = {
          activeTab: 1,
+         filter: 'none',
          products: [],
+         pSort: 'Product Name',
          orders: [],
+         oSort: 'Order ID',
          newItemForm: {
             name: '',
             price: '',
@@ -39,8 +37,7 @@ class App extends Component {
             quantity: '',
             price: '',
             status: '',
-            productIDs: '',
-            imageURL: ''
+            productIDs: ''
          },
       };  
    }
@@ -64,6 +61,7 @@ class App extends Component {
              'category' : '', 'brand' : '', 'imageURL' : ''}});
             console.log(callResult);
             this.setState({ products: [...this.state.products, callResult.data] });
+            this.setSortedProducts("Product Name");
             console.log(this.state.products);
          }
       });
@@ -88,14 +86,15 @@ class App extends Component {
       this.makeOrderPostCall(order).then( callResult => {
          if (callResult !== false) {
             this.setState({ newOrderForm: {'products': '', 'quantity': '', 
-               'price': '', 'status': '', 'productIDs': '', 'imageURL': ''
-            }});
+               'price': '', 'status': '', 'productIDs': '', 'imageURL': ''}});
             console.log(callResult);
             this.setState({ orders: [...this.state.orders, callResult.data] });
+            this.setSortedOrders("Order ID");
             console.log(this.state.orders);
          }
       });
       this.changeActiveTab(3);
+      this.setSortedProducts('Product Name');
    }
 
    makeOrderPostCall(order) {
@@ -142,14 +141,115 @@ class App extends Component {
       })
     }
 
+   setSortedProducts(sortBy){
+      this.setState({products: this.getSortedProducts(sortBy)});
+      this.setState({pSort : sortBy})
+   }
+
+   getSortedProducts(sortBy){
+      let dataToSort=this.state.products;
+      dataToSort.sort((a, b) => {
+         if (sortBy === 'Product Name') {
+            a = a.name.toLowerCase();
+            b = b.name.toLowerCase();
+            if (a < b)
+               return -1;
+            else if (a > b)
+               return 1;
+            else
+               return 0;
+         }
+         if (sortBy === 'Price')
+            return a.price-b.price;
+         if (sortBy === 'Quantity')
+            return a.quantity-b.quantity;
+         if (sortBy === 'Category') {
+            a = a.category.toLowerCase();
+            b = b.category.toLowerCase();
+            if (a < b)
+               return -1;
+            else if (a > b)
+               return 1;
+            else
+               return 0;
+         }
+         if (sortBy === 'Brand') {
+            a = a.brand.toLowerCase();
+            b = b.brand.toLowerCase();
+            if (a < b)
+               return -1;
+            else if (a > b)
+               return 1;
+            else
+               return 0;
+         }
+         if (sortBy === 'Product ID') {
+            if (a._id < b._id)
+               return -1;
+            else if (a._id > b._id)
+               return 1;
+            else
+               return 0;
+         }
+      });
+      return dataToSort;
+   }
+
+   setSortedOrders(sortBy){
+      this.setState({orders: this.getSortedOrders(sortBy)});
+      this.setState({oSort : sortBy})
+   }
+
+   getSortedOrders(sortBy){
+      let dataToSort=this.state.orders;
+      dataToSort.sort((a, b) => {
+         if (sortBy === 'Order ID') {
+            if (a._id < b._id)
+               return -1;
+            else if (a._id > b._id)
+               return 1;
+            else
+               return 0;
+         }
+         if (sortBy === 'Product Name') {
+            a = a.products.toLowerCase();
+            b = b.products.toLowerCase();
+            if (a < b)
+               return -1;
+            else if (a > b)
+               return 1;
+            else
+               return 0;
+         }
+         if (sortBy === 'Quantity')
+            return a.quantity-b.quantity;
+         if (sortBy === 'Price')
+            return a.price-b.price;
+         if (sortBy === 'Status') {
+            a = a.status.toLowerCase();
+            b = b.status.toLowerCase();
+            if (a < b)
+               return -1;
+            else if (a > b)
+               return 1;
+            else
+               return 0;
+         }
+         if (sortBy === 'Product ID') {
+            return a.productIDs - b.productIDs;
+         }
+      });
+      return dataToSort;
+   }
+
    componentDidMount() {
       axios.get('http://localhost:5000/products')
        .then(res => {
          const products = res.data.products_list;
          this.setState({ products });
+         this.setSortedProducts('Product Name');
        })
        .catch(function (error) {
-         //Not handling the error. Just logging into the console.
          console.log(error);
        });
       axios.get('http://localhost:5000/orders')
@@ -158,15 +258,11 @@ class App extends Component {
          this.setState({ orders });
        })
        .catch(function (error) {
-         //Not handling the error. Just logging into the console.
          console.log(error);
        });
    }
 
-   // TODO: don't forget to write in docs to npm install node-sass
-
    render () {
-      // const { products } = this.state;
 
       return (
          <div className='App'>
@@ -175,29 +271,27 @@ class App extends Component {
                <Sidebar activeTab={this.state.activeTab} changeTab={this.changeActiveTab.bind(this)}/>
                <MyRouter 
                   activeTab={this.state.activeTab}
+                  changeActiveTab={this.changeActiveTab.bind(this)}
 
                   products={this.state.products}
+                  pSort={this.state.pSort}
                   newItemFormData={this.state.newItemForm}
                   changeNewItemForm={this.changeNewItemForm.bind(this)}
                   addNewProduct={this.addNewProduct.bind(this)}
                   removeProduct={this.removeProduct.bind(this)}
+                  setSortedProducts={this.setSortedProducts.bind(this)}
 
                   orders={this.state.orders}
+                  oSort={this.state.oSort}
                   newOrderFormData={this.state.newOrderForm}
                   changeNewOrderForm={this.changeNewOrderForm.bind(this)}
                   addNewOrder={this.addNewOrder.bind(this)}
                   removeOrder={this.removeOrder.bind(this)}
+                  setSortedOrders={this.setSortedOrders.bind(this)}
                />
             </div>
          </div>
       );
-
-      // return (
-      //    <div className="container">
-      //       <Table productData={products} removeproduct={this.removeproduct} />
-      //       <Form handleSubmit={this.handleSubmit} />
-      //    </div>
-      // );
    }
 }
 
