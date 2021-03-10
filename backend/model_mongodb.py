@@ -32,11 +32,6 @@ class Model(dict):
             self.clear()
             return resp
 
-    def remove_all(self):
-        resp = self.collection.remove({})
-        self.clear()
-        return resp
-
 class Product(Model):
     db_client = pymongo.MongoClient('localhost', 27017)
     collection = db_client["inventory"]["products_list"]

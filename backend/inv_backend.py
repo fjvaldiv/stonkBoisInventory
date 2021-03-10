@@ -41,11 +41,25 @@ def get_products():
         return {"products_list": result}
     elif request.method == 'POST':
         productToAdd = request.get_json()
-        print(productToAdd)
         newProduct = Product(productToAdd)
         newProduct.save()
         resp = jsonify(newProduct), 201
         return resp
+
+@app.route('/products/<id>', methods = ['GET', 'DELETE'])
+def get_product(id):
+    if request.method == 'GET':
+        product = Product({"_id":id})
+        if product.reload() :
+            return product
+        else :
+            return jsonify({"error": "Product not found"}), 404
+    elif request.method == 'DELETE':
+        product = Product({"_id":id})
+        resp = product.remove()
+        if resp['n'] != 1:
+            return {}, 404
+        return {}, 204
 
 @app.route('/orders', methods=['GET', 'POST'])
 def get_orders():
@@ -63,18 +77,17 @@ def get_orders():
         resp = jsonify(newOrder), 201
         return resp
 
-@app.route('/products/<id>', methods = ['DELETE'])
-def get_product(id):
+@app.route('/orders/<id>', methods = ['GET', 'DELETE'])
+def get_order(id):
     if request.method == 'GET':
-        product = Product({"_id":id})
-        if product.reload() :
-            return product
+        order = Order({"_id":id})
+        if order.reload() :
+            return order
         else :
-            return jsonify({"error": "Product not found"}), 404
+            return jsonify({"error": "Order not found"}), 404
     elif request.method == 'DELETE':
-        product = Product({"_id":id})
-        resp = product.remove()
+        order = Order({"_id":id})
+        resp = order.remove()
         if resp['n'] != 1:
             return {}, 404
         return {}, 204
-
