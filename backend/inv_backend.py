@@ -41,6 +41,7 @@ def get_products():
         return {"products_list": result}
     elif request.method == 'POST':
         productToAdd = request.get_json()
+        print(productToAdd)
         newProduct = Product(productToAdd)
         newProduct.save()
         resp = jsonify(newProduct), 201

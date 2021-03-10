@@ -58,6 +58,7 @@ class App extends Component {
    }
 
    addNewProduct(product) {
+      console.log(product);
       this.makeProductPostCall(product).then( callResult => {
          if (callResult !== false) {
             this.setState({ newItemForm: {'name' : '', 'price' : '', 'quantity' : '',
