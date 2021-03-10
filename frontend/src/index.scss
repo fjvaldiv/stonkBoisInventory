@@ -136,11 +136,20 @@ body{
     padding: 0px 8px;
     padding-bottom: 4px;
   }
+  .quantity{
+    text-align:right;
+    padding:4px;
+    font-weight:300;
+    span{font-weight:bold;}
+  }
   .price{
     text-align:right;
     padding:4px;
     font-weight:300;
     span{font-weight:bold;}
+    .sa-q, .sa-p{
+      display: inline-block;
+    }
   }
   p{margin:0px;padding:0px;}
   img{width:200px; height:200px;}
@@ -270,11 +279,14 @@ body{
     }
     .active{
       opacity:1;
-      background:#fff;
+      background:$confirm-green;
+      color:white;
+      font-weight: 400;
+      opacity:1;
       position:relative;
       z-index:3;
       &:hover{
-        background:#fff;
+        background:lighten($confirm-green, 10%);
         cursor:default;
       }
     }

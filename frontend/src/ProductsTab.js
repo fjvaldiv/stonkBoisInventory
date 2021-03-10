@@ -25,29 +25,17 @@ const ProductTableRow = (props) => {
     }
     
     renderTableRows(products){
-      // const categoryKeys = Object.keys(inventory.categories);
-      // const CKLength = categoryKeys.length;
-      // let listOfProducts = [];
-      
-      // for(let i = 0; i<CKLength; i++){
-      //   let category = categoryKeys[i];
-      //   listOfProducts = listOfProducts.concat(inventory.categories[category]);
-      // }
-      
-      // let LOPlength = listOfProducts.length;
-      // let productsLength = products.length;s
-
       if (products.length === 0){
         return <div><p>There are currently no items in the inventory</p></div>
       } else {
         let rows = [
          <tr>
-          <th>Product Name</th>
-          <th>Price</th>
-          <th>Quantity</th>
-          <th>Category</th>
-          <th>Brand</th>
-          <th>Product ID</th>
+          <th onClick={() => this.props.setSortedProducts('Product Name')}>Product Name</th>
+          <th onClick={() => this.props.setSortedProducts('Price')}>Price</th>
+          <th onClick={() => this.props.setSortedProducts('Quantity')}>Quantity</th>
+          <th onClick={() => this.props.setSortedProducts('Category')}>Category</th>
+          <th onClick={() => this.props.setSortedProducts('Brand')}>Brand</th>
+          <th onClick={() => this.props.setSortedProducts('Product ID')}>Product ID</th>
           <th>Image</th>
         </tr>
         ];
@@ -59,14 +47,14 @@ const ProductTableRow = (props) => {
         return rows;
       }
     }
-    
+
     render(){
       return(
         <div className='ProductsTab'>
-          <h1>Available Products List
-            <button style={{float: 'right'}}>Add New Product</button>
-          </h1>
+          <h1>Available Products List</h1>
+          <button onClick={() => this.props.changeActiveTab(0)} style={{float: 'right'}}>Add New Product</button>
           <p>Showing all available products:</p>
+          <p>Sorted by: <b>{this.props.pSort}</b> (Click on row header to sort)</p>
           <table className='productTable'>
             {this.renderTableRows(this.props.products)}
           </table>
