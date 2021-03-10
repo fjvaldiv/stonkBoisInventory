@@ -279,11 +279,14 @@ body{
     }
     .active{
       opacity:1;
-      background:#fff;
+      background:$confirm-green;
+      color:white;
+      font-weight: 400;
+      opacity:1;
       position:relative;
       z-index:3;
       &:hover{
-        background:#fff;
+        background:lighten($confirm-green, 10%);
         cursor:default;
       }
     }
