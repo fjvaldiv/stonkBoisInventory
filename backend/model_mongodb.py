@@ -32,6 +32,11 @@ class Model(dict):
             self.clear()
             return resp
 
+    def remove_all(self):
+        resp = self.collection.remove({})
+        self.clear()
+        return resp
+
 class Product(Model):
     db_client = pymongo.MongoClient('localhost', 27017)
     collection = db_client["inventory"]["products_list"]
@@ -60,7 +65,11 @@ class Product(Model):
             product["_id"] = str(product["_id"])
         return products
 
-    #def find_by_id(self, id):
+    def find_by_price(self, price):
+        products = list(self.collection.find({"price" : price}))
+        for product in products:
+            product["_id"] = str(product["_id"])
+        return products
 
 class Order(Model):
     db_client = pymongo.MongoClient('localhost', 27017)
@@ -78,14 +87,26 @@ class Order(Model):
             order["_id"] = str(order["_id"])
         return orders
 
-    '''def find_by_category(self, category):
-        products = list(self.collection.find({"category" : category}))
-        for product in products:
-            product["_id"] = str(product["_id"])
-        return products
+    def find_by_status(self, status):
+        orders = list(self.collection.find({"status": status}))
+        for order in orders:
+            order["_id"] = str(order["_id"])
+        return orders
 
-    def find_by_brand(self, brand):
-        products = list(self.collection.find({"brand" : brand}))
-        for product in products:
-            product["_id"] = str(product["_id"])
-        return products'''
+    def find_by_quantity(self, quantity):
+        orders = list(self.collection.find({"quantity": quantity}))
+        for order in orders:
+            order["_id"] = str(order["_id"])
+        return orders
+    
+    def find_by_price(self, price):
+        orders = list(self.collection.find({"price": price}))
+        for order in orders:
+            order["_id"] = str(order["_id"])
+        return orders
+    
+    def find_by_productID(self, productID):
+        orders = list(self.collection.find({"productID": productID}))
+        for order in orders:
+            order["_id"] = str(order["_id"])
+        return orders
