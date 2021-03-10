@@ -31,6 +31,11 @@ class Model(dict):
             resp = self.collection.remove({"_id": ObjectId(self._id)})
             self.clear()
             return resp
+    
+    def remove_all(self):
+        resp = self.collection.remove({})
+        self.clear()
+        return resp
 
 class Product(Model):
     db_client = pymongo.MongoClient('localhost', 27017)
@@ -60,8 +65,6 @@ class Product(Model):
             product["_id"] = str(product["_id"])
         return products
 
-    #def find_by_id(self, id):
-
 class Order(Model):
     db_client = pymongo.MongoClient('localhost', 27017)
     collection = db_client["orders"]["orders_list"]
@@ -77,15 +80,3 @@ class Order(Model):
         for order in orders:
             order["_id"] = str(order["_id"])
         return orders
-
-    '''def find_by_category(self, category):
-        products = list(self.collection.find({"category" : category}))
-        for product in products:
-            product["_id"] = str(product["_id"])
-        return products
-
-    def find_by_brand(self, brand):
-        products = list(self.collection.find({"brand" : brand}))
-        for product in products:
-            product["_id"] = str(product["_id"])
-        return products'''
